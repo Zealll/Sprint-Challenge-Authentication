@@ -23,7 +23,23 @@ function register(req, res) {
 }
 
 function login(req, res) {
-  // implement user login
+  let {username, password} = req.body
+
+  db
+  .findBy({ username })
+  .first()
+  .then(user => {
+    req.session.user = user
+
+    if (user && bcrypt.compareSync(password, user.password)) {
+      const token = generateToken(user)
+
+      res.status(200).json({message: `Logged In! Your ID is ${user.id}`, token})
+    } else {
+      res.status(401).json({message: 'Wrong Credentials'})
+    }
+  })
+  .catch(error => res.status(500).json(error))
 }
 
 function getJokes(req, res) {
