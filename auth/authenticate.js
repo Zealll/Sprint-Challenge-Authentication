@@ -1,8 +1,10 @@
 const jwt = require('jsonwebtoken');
+require('dotenv').config()
 
 const jwtKey =
-  process.env.JWT_SECRET ||
-  'add a .env file to root of project with the JWT_SECRET variable';
+  process.env.JWT_SECRET || 'add a .env file to root of project with the JWT_SECRET variable';
+
+  const secret = 'secret'
 
 // quickly see what this file exports
 module.exports = {
@@ -31,13 +33,10 @@ function authenticate(req, res, next) {
 
 function generateToken(user) {
   const payload = {
-      subject: user.id,
-      username: user.username
+    user
   }
-
   const options = {
-      expiresIn: '1d'
+    expiresIn: '1h'
   }
-
-  return jsonWT.sign(payload, jwtKey, options)
+return jwt.sign(payload, jwtKey, options)
 }

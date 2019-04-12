@@ -1,5 +1,6 @@
 const axios = require('axios');
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken');
 
 const db = require('./helpers.js')
 
@@ -22,23 +23,7 @@ function register(req, res) {
   .catch(error => res.status(500).json(error))
 }
 
-function login(req, res) {
-  const user = req.body;
 
-    db
-    .findBy(user)
-    .then(users => {
-        if(users.length && bcrypt.compareSync(user.password, users[0].password)) {
-            const token = generateToken(users);
-            res.json({ message: `Welcome ${user.username}`, token: token });
-        } else {
-            res.status(404).json({ message: 'Unable to login' });
-        }
-    })
-    .catch(err => {
-        res.status(500).json({ errorMessage: 'Failed to verify. Please try again.' });
-    });
-}
 
 function getJokes(req, res) {
   const requestOptions = {
@@ -56,6 +41,23 @@ function getJokes(req, res) {
 } 
 
 
+// function login(req, res) {
+//   const user = req.body;
+
+//     db
+//     .findBy(user)
+//     .then(loggedIn => {
+//         if(loggedIn.length && bcrypt.compareSync(user.password, loggedIn[0].password)) {
+//             const token = jwt.sign({ username: loggedIn[0].username }, 'secrettttttt');
+//             res.json({ message: `${user.username}, Login was a Success`, token });
+//         } else {
+//             res.status(404).json({ message: 'Wrong Credentials' });
+//         }
+//     })
+//     .catch(err => {
+//         res.status(500).json({ errorMessage: 'Something Went Wrong' });
+//     });
+// }
 
 
 
@@ -70,8 +72,6 @@ function login(req, res) {
   .findBy({ username })
   .first()
   .then(user => {
-    req.session.user = user
-
     if (user && bcrypt.compareSync(password, user.password)) {
       const token = generateToken(user)
 
@@ -82,3 +82,26 @@ function login(req, res) {
   })
   .catch(error => res.status(500).json(error))
 }
+
+
+
+
+
+
+// function login(req, res) {
+//   const user = req.body;
+
+//     db
+//     .findBy(user)
+//     .then(loggedIn => {
+//         if(loggedIn.length && bcrypt.compareSync(user.password, loggedIn[0].password)) {
+//             const token = generateToken(loggedIn)
+//             res.json({ message: `${user.username}, Login was a Success`, token });
+//         } else {
+//             res.status(404).json({ message: 'Wrong Credentials' });
+//         }
+//     })
+//     .catch(err => {
+//         res.status(500).json({ errorMessage: 'Something Went Wrong' });
+//     });
+// }
