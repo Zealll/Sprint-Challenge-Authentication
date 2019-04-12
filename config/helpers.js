@@ -13,6 +13,6 @@ function insert(user) {
 }
 
 
-function findBy(credentials) {
-    return db('users').where(credentials)
+function findBy(user) {
+    return db('users').where(user)
 }
