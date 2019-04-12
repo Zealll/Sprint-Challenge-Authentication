@@ -1,5 +1,7 @@
 const axios = require('axios');
 
+const db = require('./helpers.js')
+
 const { authenticate } = require('../auth/authenticate');
 
 module.exports = server => {
